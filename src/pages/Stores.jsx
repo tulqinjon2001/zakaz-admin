@@ -39,7 +39,13 @@ const Stores = () => {
       setEditingStore(null);
     } catch (error) {
       console.error('Error saving store:', error);
-      alert('Do\'konni saqlashda xatolik');
+      const errorMessage = error.response?.data?.error || error.message || 'Do\'konni saqlashda xatolik';
+      console.error('Error details:', {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: errorMessage,
+      });
+      alert(`Do'konni saqlashda xatolik: ${errorMessage}`);
     }
   };
 

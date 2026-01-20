@@ -29,11 +29,27 @@ const Customers = () => {
     if (!window.confirm('Bu mijozni o\'chirishni xohlaysizmi?')) return;
     
     try {
-      await usersAPI.delete(id);
+      const response = await usersAPI.delete(id);
       await fetchCustomers();
+      
+      // Show success message from backend (may include info about cascade deleted orders)
+      const successMessage = response.data?.message || 'Mijoz muvaffaqiyatli o\'chirildi!';
+      alert(successMessage);
     } catch (error) {
       console.error('Error deleting customer:', error);
-      alert('Mijozni o\'chirishda xatolik');
+      console.error('Error response:', error.response?.data);
+      console.error('Error status:', error.response?.status);
+      
+      // Show detailed error message from backend
+      const errorData = error.response?.data || {};
+      const errorMessage = errorData.error || 'Mijozni o\'chirishda xatolik';
+      
+      if (error.response?.status === 404) {
+        alert('❌ Mijoz topilmadi. Ro\'yxat yangilanmoqda...');
+        await fetchCustomers();
+      } else {
+        alert(`❌ Xatolik: ${errorMessage}`);
+      }
     }
   };
 

@@ -159,10 +159,24 @@ const Products = () => {
     }
   };
 
-  const openModal = () => {
+  const openModal = async () => {
     setEditingProduct(null);
     resetForm();
     setShowModal(true);
+    
+    // Load next suggested code when creating new product
+    try {
+      const response = await productsAPI.getNextCode();
+      if (response.data?.code) {
+        setFormData(prev => ({
+          ...prev,
+          code: response.data.code,
+        }));
+      }
+    } catch (error) {
+      console.error('Error loading next code:', error);
+      // Continue without auto-filling code if request fails
+    }
   };
 
   const resetForm = () => {
@@ -361,15 +375,15 @@ const Products = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Kodi *
+                    Kodi
+                    <span className="text-xs text-gray-500 ml-1">(bo'sh qoldirilsa avtomatik yaratiladi)</span>
                   </label>
                   <input
                     type="text"
                     className="input"
                     value={formData.code}
                     onChange={(e) => setFormData({ ...formData, code: e.target.value })}
-                    placeholder="SKU-00000"
-                    required
+                    placeholder="SKU-00000 (ixtiyoriy)"
                   />
                 </div>
 

@@ -2,6 +2,7 @@ import axios from "axios";
 
 const API_BASE_URL =
   import.meta.env.VITE_API_URL ||
+  "http://localhost:3000/api" ||
   "https://zakaz-backend-production.up.railway.app/api";
 
 const api = axios.create({
@@ -33,6 +34,7 @@ export const categoriesAPI = {
 export const productsAPI = {
   getAll: () => api.get("/admin/products"),
   getById: (id) => api.get(`/admin/products/${id}`),
+  getNextCode: () => api.get("/admin/products/next-code"),
   create: (data) => api.post("/admin/products", data),
   update: (id, data) => api.put(`/admin/products/${id}`, data),
   delete: (id) => api.delete(`/admin/products/${id}`),
